@@ -1,0 +1,45 @@
+{
+  
+  "timeZone": "America/Los_Angeles",
+  "exceptionLogging": "STACKDRIVER",
+  "dependencies": {
+    "libraries": [
+      {
+        "userSymbol": "OAuth2",
+        "version": "43",
+        "libraryId": "1B7FSrk5Zi6L1rSxxTDgDEUsPzlukDsi4KGuTMorsTQHhGBzBkMun4iDF"
+      }
+    ]
+  },
+  "runtimeVersion": "V8",
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/documents.currentonly",
+    "https://www.googleapis.com/auth/drive.file",
+    "https://www.googleapis.com/auth/drive.addons.metadata.readonly",
+    "https://www.googleapis.com/auth/drive.appdata",
+    "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/script.storage",
+    "https://www.googleapis.com/auth/script.external_request",
+    "https://www.googleapis.com/auth/spreadsheets"
+  ],
+  "addOns": {
+    "common": {
+      "name": " ",
+      "logoUrl": "https://www.gstatic.com/images/icons/material/system/1x/library_add_black_24dp.png",
+      "universalActions": [
+        {
+          "label": "Configure Demo",
+          "runFunction": "onDemoConfig"
+        }
+      ]
+    },    
+    "docs": {
+      "homepageTrigger": {
+        "runFunction": "onDocsHomepage"
+      },
+      "onFileScopeGrantedTrigger": {
+        "runFunction": "onDocsFileScopeGranted"
+      }
+    }
+  }
+}
