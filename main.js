@@ -49,9 +49,13 @@ function buildMainInterface() {
     .setImageCropType(CardService.ImageCropType.SQUARE);
   evDecText = CardService.newDecoratedText()
     .setStartIcon(evIcon)
-    .setOnClickAction(evidenceLookupAction)
+    //.setOnClickAction(evidenceLookupAction)
 //    .setTopLabel(' against published claims')
     .setText('See Document Metrics')
+    .setOpenLink(
+      CardService.newOpenLink()
+        .setUrl('https://www.modernatx.com/')
+    );
   section2.addWidget(evDecText);
   card.addSection(section2);
 
