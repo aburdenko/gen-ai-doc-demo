@@ -183,10 +183,9 @@ function runCorrespondenceQuery(message) {
   let contextStrings = loadContextStringsFromSheet();
   let defaultContextPre = contextStrings[0];
   let defaultContextPost = contextStrings[1];
-  let suffix = '. Put "bar" at the end of each of your answers.'
 
   let context = defaultContextPre + defaultContextPre2 
-    + correspondence + '\nTarget Document Extract:\n' + defaultContextPost + suffix;
+    + correspondence + '\nTarget Document Extract:\n' + defaultContextPost;
 
   result = callChatAI(context, message);
 

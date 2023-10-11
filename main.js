@@ -36,7 +36,7 @@ function buildMainInterface() {
   rcDecText = CardService.newDecoratedText()
     .setStartIcon(rcIcon)
     .setOnClickAction(reviewCommsAction)
-    .setText('Review My Correspondence')
+    .setText('Review My Document')
     //.setText('Summarize');
   section3.addWidget(rcDecText);
   card.addSection(section3);
@@ -51,7 +51,7 @@ function buildMainInterface() {
     .setStartIcon(evIcon)
     .setOnClickAction(evidenceLookupAction)
 //    .setTopLabel(' against published claims')
-    .setText('Perform a Research Query')
+    .setText('See Document Metrics')
   section2.addWidget(evDecText);
   card.addSection(section2);
 
@@ -64,7 +64,7 @@ function buildMainInterface() {
   mqDecText = CardService.newDecoratedText()
     .setStartIcon(mqIcon)
     .setOnClickAction(medQuestionAction)
-    .setText('Ask a Question About Protocols')
+    .setText('Ask a Question \n about this document')
     //.setText('Summarize');
   section4.addWidget(mqDecText);
   card.addSection(section4);
@@ -118,8 +118,8 @@ function addCommonHeader(card) {
    let cardHeader = CardService.newCardHeader()
     .setTitle(toolName)
     .setSubtitle(companyName)
-    .setImageStyle(CardService.ImageStyle.SQUARE)
-    .setImageUrl(companyLogoUrl);
+    .setImageUrl(companyLogoUrl)
+    .setImageStyle(CardService.ImageStyle.);        
 
   card.setHeader(cardHeader);
 }

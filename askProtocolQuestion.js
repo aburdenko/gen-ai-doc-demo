@@ -1,6 +1,9 @@
-const toolName = 'Clinical Trial Assistant';
+
+
+
+const toolName = 'Moderna Document \n Assistant';
 const companyName = 'Cymbal Health';
-const companyLogoUrl = 'https://www.google.com/u/0/ac/images/logo.gif?uid=108134850221697859279&service=google_gsuite';
+const companyLogoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Moderna_logo.svg/320px-Moderna_logo.svg.png';
 
 //const companyName = 'Moderna';
 //const companyLogoUrl = 'https://logo.clearbit.com/www.modernatx.com';
@@ -52,6 +55,14 @@ function buildMedQuestionCard() {
   card.addSection(section);
 
   return card.build();
+}
+
+function storeSecrets() {
+  PropertiesService.getScriptProperties().setProperties({
+      'toolName': 'SOP Document Assistant',
+      'companyName': 'Moderna',
+      'companyLogoUrl': 'mySecretApiKey'      
+  })
 }
 
 function buildMedQuestionResultsCard(event) {
