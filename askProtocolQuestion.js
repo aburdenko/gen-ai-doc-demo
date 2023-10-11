@@ -1,22 +1,6 @@
 
 
 
-const toolName = 'Moderna Document \n Assistant';
-const companyName = 'Cymbal Health';
-const companyLogoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Moderna_logo.svg/320px-Moderna_logo.svg.png';
-
-//const companyName = 'Moderna';
-//const companyLogoUrl = 'https://logo.clearbit.com/www.modernatx.com';
-
-const bioTechIconUrl = 'https://www.gstatic.com/images/icons/material/system/1x/biotech_black_24dp.png';
-const summarizeIconUrl = 'https://www.gstatic.com/images/icons/material/system/1x/summarize_black_24dp.png';
-const virusIconUrl = 'https://www.gstatic.com/images/icons/material/system/1x/microbiology_black_24dp.png';
-const evidenceUrl = 'https://www.gstatic.com/images/icons/material/system/1x/feature_search_black_24dp.png';
-const reviewCommsUrl = 'https://www.gstatic.com/images/icons/material/system/1x/edit_note_black_24dp.png';
-const medQuestionUrl = 'https://www.gstatic.com/images/icons/material/system/1x/psychology_alt_black_24dp.png';
-
-const medQuestionPrompt ='You are a helpful medical knowledge assistant. Provide useful, complete and scientifically-grounded answers to queries. Question: ';
-const defaultMedQuestion = 'What are the main steps in Phase 2 clinical trials?';
 
 function buildMedQuestionCard() {
 

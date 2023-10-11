@@ -54,7 +54,7 @@ function buildMainInterface() {
     .setText('See Document Metrics')
     .setOpenLink(
       CardService.newOpenLink()
-        .setUrl('https://www.modernatx.com/')
+        .setUrl('https://lookerstudio.google.com/s/p-dFx8SvN-c')
     );
   section2.addWidget(evDecText);
   card.addSection(section2);
@@ -122,8 +122,8 @@ function addCommonHeader(card) {
    let cardHeader = CardService.newCardHeader()
     .setTitle(toolName)
     .setSubtitle(companyName)
-    .setImageUrl(companyLogoUrl)
-    .setImageStyle(CardService.ImageStyle.);        
+    .setImageUrl(companyLogoUrl);
+   // .setImageStyle(CardService.ImageStyle.);        
 
   card.setHeader(cardHeader);
 }
