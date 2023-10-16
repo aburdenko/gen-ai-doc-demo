@@ -85,6 +85,7 @@ function callTextAI(prompt) {
   // For troubleshooting
   //console.log("response: " + r.toString());
   var responseAll = JSON.parse(r.toString());
+  console.log( responseAll ); 
   var response = responseAll.predictions[0].content;
 
   console.log('callTextAI(): Response: ' + response);

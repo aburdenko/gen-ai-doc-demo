@@ -13,12 +13,13 @@ function buildMedQuestionCard() {
 
   section.addWidget(
     CardService.newTextParagraph().setText(
-      "Ask a question about clinical trial protocol adherence below:"
+      "Ask a question about this SOP Document"
     )
   );
 
   section.addWidget(CardService.newTextParagraph().setText('\n'));
 
+  
   let textInput = CardService.newTextInput();
   textInput.setFieldName('query')
     .setHint('Example: ' + defaultMedQuestion);
@@ -41,14 +42,6 @@ function buildMedQuestionCard() {
   return card.build();
 }
 
-function storeSecrets() {
-  PropertiesService.getScriptProperties().setProperties({
-      'toolName': 'SOP Document Assistant',
-      'companyName': 'Moderna',
-      'companyLogoUrl': 'mySecretApiKey'      
-  })
-}
-
 function buildMedQuestionResultsCard(event) {
   let formInputs = event.commonEventObject.formInputs;
   let query = defaultMedQuestion;
@@ -57,6 +50,8 @@ function buildMedQuestionResultsCard(event) {
     query = formInputs.query.stringInputs.value[0];
   }
   
+  console.log( "query : " + query );
+
   let response = runMedicalQuery(query);
   let responseParagraphs = response.split('\n');
 
@@ -99,9 +94,21 @@ function buildMedQuestionResultsCard(event) {
   return actionResponse;
 }
 
-function runMedicalQuery(query) {
-  query = medQuestionPrompt + query;
-  result = callTextAI(query);
+function runMedicalQuery(query) {    
+  
+  if (null == (result = getProperty(query))){    
+    let doc = DocumentApp.getActiveDocument();
+    let docContentPrompt = doc.getBody().getText();
+
+    preQuery = "Using the following document: ";
+    preQuery += docContentPrompt + "\n";
+    query = preQuery + "\n" + query;
+
+    console.log("Prompt is: " + query);
+
+    result = callTextAI(query);    
+    setProperty( query, result );
+  }
 
   return result;
 }
