@@ -12,8 +12,6 @@ function onDocsHomepage(e) {
 }
 
 function buildMainInterface() {
-  buildProperties();
-  
   let card = CardService.newCardBuilder();
 
   addCommonHeader(card);
@@ -153,31 +151,3 @@ function addCommonFooter(card) {
 
   card.setFixedFooter(footer);
 }
-
-
-function buildProperties() {
-  PropertiesService.getScriptProperties().setProperties({            
-      'toolName': 'Moderna Document Review Assistant',
-      'companyName': 'Moderna',
-      'companyLogoUrl': 'https://logo.clearbit.com/www.modernatx.com',
-      'bioTechIconUrl': 'https://www.gstatic.com/images/icons/material/system/1x/biotech_black_24dp.png',
-      'summarizeIconUrl': 'https://www.gstatic.com/images/icons/material/system/1x/summarize_black_24dp.png',
-      'virusIconUrl': 'https://www.gstatic.com/images/icons/material/system/1x/microbiology_black_24dp.png',
-      'evidenceUrl': 'https://www.gstatic.com/images/icons/material/system/1x/feature_search_black_24dp.png',
-      'reviewCommsUrl': 'https://www.gstatic.com/images/icons/material/system/1x/edit_note_black_24dp.png',
-      'medQuestionUrl': 'https://www.gstatic.com/images/icons/material/system/1x/psychology_alt_black_24dp.png',
-
-      'DOC_PROP_STATIC_DEMO_MODE': 'DOC_PROP_STATIC_DEMO_MODE',
-      'DOC_PROP_USE_MED_PALM': 'DOC_PROP_USE_MED_PALM',      
-      'defaultMedQuestion': 'What is this document about?'
-  })
-}
-
-function setProperty( propName, propValue ) {
-  PropertiesService.getScriptProperties().setProperty( propName,  propValue);
-}
-
-function getProperty( propName ) {
-  return PropertiesService.getScriptProperties().getProperty( propName )  
-}
-
