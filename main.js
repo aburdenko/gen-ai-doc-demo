@@ -96,6 +96,7 @@ function buildMainInterface() {
 
   section6.addWidget(cardSection1SelectionInput1);
   card.addSection(section6);
+  
 
   return card.build();
 }
