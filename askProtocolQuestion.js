@@ -1,5 +1,5 @@
-
-
+const medQuestionPrompt ='You are a helpful medical knowledge assistant. Provide useful, complete and scientifically-grounded answers to queries. Question: ';
+const defaultMedQuestion = 'What are the main steps in Phase 2 clinical trials?';
 
 
 function buildMedQuestionCard() {
@@ -41,6 +41,7 @@ function buildMedQuestionCard() {
 
   return card.build();
 }
+
 
 function buildMedQuestionResultsCard(event) {
   let formInputs = event.commonEventObject.formInputs;
