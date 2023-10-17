@@ -91,7 +91,8 @@ function buildMainInterface() {
         .setType(CardService.SelectionInputType.DROPDOWN)
         .addItem('Draft', 'Draft', true)
         .addItem('Ready For Review', 'ReadyforReview', false)
-        .addItem('Under Review', 'UnderReview', false);
+        .addItem('Under Review', 'UnderReview', false)
+        .addItem('Approved', 'UnderReview', false);
 
   section6.addWidget(cardSection1SelectionInput1);
   card.addSection(section6);
