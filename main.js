@@ -84,6 +84,18 @@ function buildMainInterface() {
   section5.addWidget(apText);
   card.addSection(section5);
 
+  let section6 = CardService.newCardSection();
+  let cardSection1SelectionInput1 = CardService.newSelectionInput()
+        .setFieldName('documentStage')
+        .setTitle('Document Stage')
+        .setType(CardService.SelectionInputType.DROPDOWN)
+        .addItem('Draft', 'Draft', true)
+        .addItem('Ready For Review', 'ReadyforReview', false)
+        .addItem('Under Review', 'UnderReview', false);
+
+  section6.addWidget(cardSection1SelectionInput1);
+  card.addSection(section6);
+
   return card.build();
 }
 
