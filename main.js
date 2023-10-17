@@ -96,7 +96,7 @@ function buildMainInterface() {
 
   section6.addWidget(cardSection1SelectionInput1);
   card.addSection(section6);
-  
+
 
   return card.build();
 }
@@ -169,8 +169,7 @@ function addCommonFooter(card) {
 }
 
 
-
-function buildProperties() {
+function buildProperties() {  
   PropertiesService.getScriptProperties().setProperties({            
       'toolName': 'Moderna Document Review Assistant',
       'companyName': 'Moderna',
@@ -188,11 +187,33 @@ function buildProperties() {
   })
 }
 
-function setProperty( propName, propValue ) {
-  PropertiesService.getScriptProperties().setProperty( propName,  propValue);
+function setProperty( propName, propValue ) {  
+  // Get user properties in the current script.
+  const userProperties = PropertiesService.getUserProperties();    
+  try {    
+    userProperties.setProperty( propName,  propValue);
+  } catch (err) {
+    // TODO (developer) - Handle exception
+    console.log('Failed with error %s', err.message);
+    // Delete all user properties in the current script.
+    userProperties.deleteAllProperties();    
+  }  
 }
 
 function getProperty( propName ) {
-  return PropertiesService.getScriptProperties().getProperty( propName )  
+
+  prop = null;
+  const userProperties = PropertiesService.getUserProperties();      
+  try {
+    // Get user properties in the current script.    
+    prop = userProperties.getProperty( propName )  
+  } catch (err) {
+    // TODO (developer) - Handle exception
+    console.log('Failed with error %s', err.message);
+    // Delete all user properties in the current script.
+    userProperties.deleteAllProperties();
+  }
+
+  return prop;
 }
 

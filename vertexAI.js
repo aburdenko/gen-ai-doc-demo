@@ -78,9 +78,9 @@ function callTextAI(prompt) {
       })
       });
 
-      setProperty( message, r.toString() );
+      setProperty( structuredQuestion, r.toString() );
     } catch(e){
-      console.log(e);
+      console.error(e);
       return 'Sorry, something went wrong calling the LLM Text API.';
     }
   }
