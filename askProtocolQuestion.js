@@ -1,5 +1,4 @@
 const medQuestionPrompt ='You are a helpful medical knowledge assistant. Provide useful, complete and scientifically-grounded answers to queries. Question: ';
-const defaultMedQuestion = 'What are the main steps in Phase 2 clinical trials?';
 
 
 function buildMedQuestionCard() {
@@ -13,7 +12,7 @@ function buildMedQuestionCard() {
 
   section.addWidget(
     CardService.newTextParagraph().setText(
-      "Ask a question about clinical trial protocol adherence below:"
+      "Ask a question about this SOP Document"
     )
   );
 
@@ -145,7 +144,7 @@ function buildMedQuestionResultsCard(event) {
   section.addWidget(p);
 
   p = CardService.newTextParagraph()
-    .setText('An AI generated response is shown below. Click on individual paragrapms to append them to your Google Doc.');
+    .setText('An AI generated response is shown below.');
   section.addWidget(p);
   section.addWidget(CardService.newDivider());
 
@@ -173,8 +172,22 @@ function buildMedQuestionResultsCard(event) {
 }
 
 function runMedicalQuery(query) {
-  query = medQuestionPrompt + query;
-  result = callTextAI(query);
+  // if (null == (result = getProperty(query))){    
+    let doc = DocumentApp.getActiveDocument();
+    let docContentPrompt = doc.getBody().getText();
+      
+    preQuery = "Using the following document: ";
+    preQuery += docContentPrompt + "\n";
+    query = preQuery + ". " + query;
+
+    console.log("Prompt is: " + query);
+    result = callTextAI(query);    
+
+    setProperty( query, result );
+  //}
 
   return result;
+
 }
+
+

@@ -56,33 +56,30 @@ function callTextAI(prompt) {
   var apiUrl = "https://"+API_ENDPOINT+"/v1/projects/"+PROJECT_ID+"/locations/us-central1/publishers/google/models/"+TEXT_MODEL_ID+":predict";
 
   structuredQuestion = prompt;
-  if (null == (r = getProperty(structuredQuestion))){    
-    try {
-      var r = UrlFetchApp.fetch(apiUrl, {
-          method: "post",
-          contentType: 'application/json',
-          muteHttpExceptions:true,
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          },
-          payload: JSON.stringify( {
-        "instances":  [{
-        "content": structuredQuestion
-        }],
-        "parameters": {
-          "temperature": 0.2,
-          "maxOutputTokens": 1024,
-          "topP": 1.0,
-          "topK": 40
-        }
-      })
-      });
-
-      setProperty( message, r.toString() );
-    } catch(e){
-      console.log(e);
-      return 'Sorry, something went wrong calling the LLM Text API.';
-    }
+  
+  try {
+    var r = UrlFetchApp.fetch(apiUrl, {
+        method: "post",
+        contentType: 'application/json',
+        muteHttpExceptions:true,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        },
+        payload: JSON.stringify( {
+      "instances":  [{
+      "content": structuredQuestion
+      }],
+      "parameters": {
+        "temperature": 0.2,
+        "maxOutputTokens": 1024,
+        "topP": 1.0,
+        "topK": 40
+      }
+    })
+    });
+  } catch(e){
+    console.log(e);
+    return 'Sorry, something went wrong calling the LLM Text API.';
   }
 
   // For troubleshooting
@@ -114,39 +111,34 @@ function callChatAI(context, message) {
 
   var apiUrl = "https://"+API_ENDPOINT+"/v1/projects/"+PROJECT_ID+"/locations/us-central1/publishers/google/models/"+CHAT_MODEL_ID+":predict";
   console.log("context: " + context);
-  
-  var r;
-  if (null == (r = getProperty(message))){    
-    try {
-      r = UrlFetchApp.fetch(apiUrl, {
-          method: "post",
-          contentType: 'application/json',
-          muteHttpExceptions:true,
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          },
-          payload: JSON.stringify( {
-        "instances":  [{
-          "context": context,
-          "messages": [
-            {
-              "author": "user",
-              "content": message,
-            }],
+  try {
+    var r = UrlFetchApp.fetch(apiUrl, {
+        method: "post",
+        contentType: 'application/json',
+        muteHttpExceptions:true,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        },
+        payload: JSON.stringify( {
+      "instances":  [{
+        "context": context,
+        "messages": [
+          {
+            "author": "user",
+            "content": message,
           }],
-        "parameters": {
-          "temperature": 0.2,
-          "maxOutputTokens": 1024,
-          "topP": 1.0,
-          "topK": 40
-        }
-      })
-      });
-    } catch(e){
-      console.log(e);
-      return 'Sorry, something went wrong calling the LLM Chat API.';
-    }
-    setProperty( message, r.toString() );
+        }],
+      "parameters": {
+        "temperature": 0.2,
+        "maxOutputTokens": 1024,
+        "topP": 1.0,
+        "topK": 40
+      }
+    })
+    });
+  } catch(e){
+    console.log(e);
+    return 'Sorry, something went wrong calling the LLM Chat API.';
   }
 
   // For troubleshooting

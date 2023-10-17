@@ -96,9 +96,8 @@ function buildCorrespondenceCardJSON(aiResponseObj) {
   for (let i=0; i < aiResponseObj.length; i++) {
     let rSection = CardService.newCardSection();
     rSection.setCollapsible(true);
-    header = 'Recommendation #' + Number(i+1) + ': '
-      + aiResponseObj[i].originalText.substring(0, 30) + '...';
-    rSection.setHeader(header);
+    rSection.setHeader('Recommendation #' + Number(i+1) + ': '
+      + aiResponseObj[i].originalText.substring(0, 30) + '...');
     console.log('recc ' + i + ' : ' + aiResponseObj[i].feedback);
 
     let txtBlock = '<b>You said: </b><font color="#FF0000">"' + aiResponseObj[i].originalText + '"</font>\n\n';
@@ -113,14 +112,8 @@ function buildCorrespondenceCardJSON(aiResponseObj) {
     rSection.addWidget(rp);
 
     let params = {
-      singleAIResponseObj: JSON.stringify(aiResponseObj[i]),
-      card,
-      rSection
+      singleAIResponseObj: JSON.stringify(aiResponseObj[i])
     };
-
-    let openMailToAction = CardService.newAction()
-      .setFunctionName('openMailTo')
-    
 
     let applySuggestionsAction = CardService.newAction()
       .setFunctionName('applySuggestion')
@@ -134,11 +127,9 @@ function buildCorrespondenceCardJSON(aiResponseObj) {
         .setText('Apply this Recommendation')
         .setOnClickAction(applySuggestionsAction)
     );
-   
-                
+
     p = CardService.newTextParagraph().setText('\n');
     rSection.addWidget(p);
-    
 
     card.addSection(rSection);
   }
@@ -239,38 +230,14 @@ function parseCorrespondenceFeedback(aiResponseTxt) {
 
 }
 
-function openMailTo(params) {
-}
-
 function applySuggestion(params) {
   let singleAIResponseObj = JSON.parse(params.parameters.singleAIResponseObj);
-  let card = params.parameters.card;
-  let rsection = params.parameters.rsection;
 
   let doc = DocumentApp.getActiveDocument();
   let body = doc.getBody();
   body.replaceText(
     singleAIResponseObj.originalText,
     singleAIResponseObj.replaceWith);
-
-
-  card.remove();  
-
-    // Get a list of all cards.
-  var cards = CardService.getCards();
-  
-
-  // Iterate over the list of cards and remove the ones that have the title "My Card".
-  for (var i = 0; i < cards.length; i++) {    
-    cardSections = CardService.getCardSections(cards[i]);
-    for (var j = 0; j < cardSections.length; j++) {
-      cardSection = cardSections[j]
-      if (cardSection.header === header) {              
-        // Remove the card section from the card.
-        CardService.removeCardSection(cardSection);
-      }
-    }
-  }
 }
 
 function loadContextStringsFromSheet() {
