@@ -111,34 +111,39 @@ function callChatAI(context, message) {
 
   var apiUrl = "https://"+API_ENDPOINT+"/v1/projects/"+PROJECT_ID+"/locations/us-central1/publishers/google/models/"+CHAT_MODEL_ID+":predict";
   console.log("context: " + context);
-  try {
-    var r = UrlFetchApp.fetch(apiUrl, {
-        method: "post",
-        contentType: 'application/json',
-        muteHttpExceptions:true,
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        },
-        payload: JSON.stringify( {
-      "instances":  [{
-        "context": context,
-        "messages": [
-          {
-            "author": "user",
-            "content": message,
+  
+  var r;
+  if (null == (r = getProperty(message))){    
+    try {
+      r = UrlFetchApp.fetch(apiUrl, {
+          method: "post",
+          contentType: 'application/json',
+          muteHttpExceptions:true,
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          },
+          payload: JSON.stringify( {
+        "instances":  [{
+          "context": context,
+          "messages": [
+            {
+              "author": "user",
+              "content": message,
+            }],
           }],
-        }],
-      "parameters": {
-        "temperature": 0.2,
-        "maxOutputTokens": 1024,
-        "topP": 1.0,
-        "topK": 40
-      }
-    })
-    });
-  } catch(e){
-    console.log(e);
-    return 'Sorry, something went wrong calling the LLM Chat API.';
+        "parameters": {
+          "temperature": 0.2,
+          "maxOutputTokens": 1024,
+          "topP": 1.0,
+          "topK": 40
+        }
+      })
+      });
+    } catch(e){
+      console.log(e);
+      return 'Sorry, something went wrong calling the LLM Chat API.';
+    }
+    setProperty( message, r.toString() );
   }
 
   // For troubleshooting

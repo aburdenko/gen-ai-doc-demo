@@ -76,12 +76,33 @@ function buildMainInterface() {
   card.addSection(section4);
 
   let section5 = CardService.newCardSection();
+
   let approveAction = CardService.newAction().setFunctionName(
     'buildApproveCard'
   );
   let apIcon = CardService.newIconImage().setIconUrl(approveUrl).setImageCropType(CardService.ImageCropType.SQUARE)
   apText = CardService.newDecoratedText().setStartIcon(apIcon).setOnClickAction(approveAction).setText('Send for approval');
   section5.addWidget(apText);
+
+  // let openMailToAction = CardService.newAction().setFunctionName(
+  //   'openMailTo'
+  // );
+
+  // let startIcon = CardService.newIconImage()                    
+  //                   .setIconUrl("mailto:aburdenko@google.com")
+  //                   .setImageCropType(ImageCropType.CIRCLE);
+                    
+
+  // section5.addWidget(
+    
+    
+  //   CardService.newDecoratedText()
+  //           .setText("Alex Burdenko")
+  //           .setBottomLabel( "Approver" )
+  //           .setStartIcon(startIcon)                        
+  //           .setOnClickAction(openMailToAction)
+  // );
+  
   card.addSection(section5);
 
   return card.build();
