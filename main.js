@@ -73,6 +73,15 @@ function buildMainInterface() {
   section4.addWidget(mqDecText);
   card.addSection(section4);
 
+  let section5 = CardService.newCardSection();
+  let approveAction = CardService.newAction().setFunctionName(
+    'buildApproveCard'
+  );
+  let apIcon = CardService.newIconImage().setIconUrl(approveUrl).setImageCropType(CardService.ImageCropType.SQUARE)
+  apText = CardService.newDecoratedText().setStartIcon(apIcon).setOnClickAction(approveAction).setText('Send for approval');
+  section5.addWidget(apText);
+  card.addSection(section5);
+
   return card.build();
 }
 
