@@ -3,7 +3,8 @@ var API_ENDPOINT="us-central1-aiplatform.googleapis.com"; // Change it only if y
 var PROJECT_ID="1078703032628"; //Your project ID
 
 // default models
-var TEXT_MODEL_ID="text-bison@001";
+var TEXT_MODEL_ID="text-bison-32k";
+//var TEXT_MODEL_ID="text-bison";
 var CHAT_MODEL_ID="chat-bison@001";
 
 var batchModuleURL = "";
@@ -31,15 +32,14 @@ function getGCPService() {
 }
 
 
-function callTextAI(prompt) {
-  console.log('callTextAI: Prompt: '+ prompt);
+function callTextAI(id, prompt, noContentPrompt) {
+  console.log('callTextAI: Prompt: '+ noContentPrompt);
   
   // check for number of tokens/chars
   if (prompt.length > batchSize) {
     return 'Sorry, this document is too large to analyze. :('
   }
-
-  var structuredQuestion;
+  
 
   var service = getGCPService();
   if (!service.hasAccess()) {
@@ -55,8 +55,8 @@ function callTextAI(prompt) {
 
   var apiUrl = "https://"+API_ENDPOINT+"/v1/projects/"+PROJECT_ID+"/locations/us-central1/publishers/google/models/"+TEXT_MODEL_ID+":predict";
 
-  structuredQuestion = prompt;
-  if (null == (r = getProperty(structuredQuestion))){    
+    
+  if (null == (r = getProperty(id + ":" + prompt))){    
     try {
       var r = UrlFetchApp.fetch(apiUrl, {
           method: "post",
@@ -67,18 +67,17 @@ function callTextAI(prompt) {
           },
           payload: JSON.stringify( {
         "instances":  [{
-        "content": structuredQuestion
+        "content": prompt
         }],
         "parameters": {
-          "temperature": 0.2,
-          "maxOutputTokens": 1024,
+          "temperature": 0.1,
+          "maxOutputTokens": 8192,
           "topP": 1.0,
           "topK": 40
         }
       })
       });
-
-      setProperty( structuredQuestion, r.toString() );
+      setProperty( id + ":" + prompt, r.toString() );
     } catch(e){
       console.error(e);
       return 'Sorry, something went wrong calling the LLM Text API.';
@@ -96,8 +95,10 @@ function callTextAI(prompt) {
 }
 
 
-function callChatAI(context, message) {
-  console.log('callChatAI: Message: '+ message);
+function callChatAI(id, context, message) {  
+  console.log( "In callChatAI..." )
+  // console.log("context: " + context);
+  // console.log("message: " + message);
   
   // check for number of tokens/chars
   if (message.length > batchSize) {
@@ -112,11 +113,32 @@ function callChatAI(context, message) {
 
   var accessToken = service.getAccessToken();
 
+  //var apiUrl = "https://"+API_ENDPOINT+"/v1/projects/"+PROJECT_ID+"/locations/us-central1/publishers/google/models/"+TEXT_MODEL_ID+":predict";
   var apiUrl = "https://"+API_ENDPOINT+"/v1/projects/"+PROJECT_ID+"/locations/us-central1/publishers/google/models/"+CHAT_MODEL_ID+":predict";
   console.log("context: " + context);
+
+  payload = JSON.stringify( {
+    "instances":  [{
+      "context": context,
+      "messages": [
+        {
+          "author": "user",
+          "content": message,
+        }],
+      }],
+    "parameters": {
+      "temperature": 0.1,
+      "maxOutputTokens": 1024,
+      "topP": 1.0,
+      "topK": 40
+    }
+  });
   
+  console.log("Get Property key is: " + id);
+  console.log("Get Property val is: " + getProperty(id));
+
   var r;
-  if (null == (r = getProperty(message))){    
+  if (null == (r = getProperty(id))){    
     try {
       r = UrlFetchApp.fetch(apiUrl, {
           method: "post",
@@ -125,31 +147,17 @@ function callChatAI(context, message) {
           headers: {
             Authorization: `Bearer ${accessToken}`
           },
-          payload: JSON.stringify( {
-        "instances":  [{
-          "context": context,
-          "messages": [
-            {
-              "author": "user",
-              "content": message,
-            }],
-          }],
-        "parameters": {
-          "temperature": 0.2,
-          "maxOutputTokens": 1024,
-          "topP": 1.0,
-          "topK": 40
-        }
-      })
-      });
+          payload: payload
+      });      
     } catch(e){
       console.log(e);
       return 'Sorry, something went wrong calling the LLM Chat API.';
     }
-    setProperty( message, r.toString() );
+    setProperty( id, r.toString() );
   }
 
   // For troubleshooting
+  
   console.log("response: " + r.toString());
   var responseAll = JSON.parse(r.toString());
   var response = responseAll.predictions[0].candidates[0].content;

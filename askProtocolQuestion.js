@@ -172,19 +172,20 @@ function buildMedQuestionResultsCard(event) {
 }
 
 function runMedicalQuery(query) {
+  console.log("in runMedicalQuery...");
   // if (null == (result = getProperty(query))){    
-    let doc = DocumentApp.getActiveDocument();
-    let docContentPrompt = doc.getBody().getText();
-      
-    preQuery = "Using the following document: ";
-    preQuery += docContentPrompt + "\n";
-    query = preQuery + ". " + query;
+  let doc = DocumentApp.getActiveDocument();
+  let docContentPrompt = doc.getBody().getText();
+    
+  preQuery = "Using the following document: ";
+  preQuery += docContentPrompt + "\n";
+  query = preQuery + ". " + query;
 
-    console.log("Prompt is: " + query);
-    result = callTextAI(query);    
+  console.log("Prompt is: " + query);
+  result = callTextAI(query);    
 
-    setProperty( query, result );
-  //}
+  setProperty( query, result );
+//}
 
   return result;
 

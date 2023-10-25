@@ -33,6 +33,8 @@ Use neutral language to describe trial outcomes."';
 */
 
 function buildCorrespondenceCard() {
+  userProperties = PropertiesService.getUserProperties();      
+  userProperties.deleteAllProperties();    
 
   let card = CardService.newCardBuilder();
 
@@ -64,8 +66,7 @@ function buildCorrespondenceCard() {
 }
 
 function buildCorrespondenceResultsCard(event) {
-
-
+  
   let aiResponseText = runCorrespondenceQuery(defaultJSONMessage);
   let aiResponseObj = parseCorrespondenceFeedback(aiResponseText);
 
@@ -176,7 +177,9 @@ function buildCorrespondenceCardText(aiResponseText) {
 }
 
 function runCorrespondenceQuery(message) {
+  console.log("in runCorrespondenceQuery...");
   let doc = DocumentApp.getActiveDocument();
+  let id = doc.getId();
 
   let correspondence = doc.getBody().getText();
 
@@ -187,8 +190,15 @@ function runCorrespondenceQuery(message) {
   let context = defaultContextPre + defaultContextPre2 
     + correspondence + '\nTarget Document Extract:\n' + defaultContextPost;
 
-  result = callChatAI(context, message);
+  let contextWithoutDoc = defaultContextPre + defaultContextPre2 
+    + "<DOCUMENT HERE>" + '\nTarget Document Extract:\n' + defaultContextPost;
 
+
+  console.log("context: " + contextWithoutDoc); 
+  console.log("message: " + message); 
+  result = callChatAI(id, context, message);
+
+  //result = callTextAI(id, context + "\n" + message, contextWithoutDoc + "\n" + message);
   return result;
 }
 
