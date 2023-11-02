@@ -1,6 +1,6 @@
 const defaultTextMessage = 'Provide Feedback in list form on Target Message based on the target document. For each item in the list, be sure to quote the original sentence from the Researcher Message.';
 
-const defaultJSONMessage = 'Provide Feedback on Target Message based on the Target Document. Structure your response as a JSON containing an array of objects with a maximum of 5 objects in the array, where each object contains the reason for your feedback (call the field "feedback"), the original sentence from the Target Message (call the field "originalText"), and the recommended text to replace the original text with (call the field "replaceWith"). Do not add commas after the last object field in each array entry. ';
+const defaultJSONMessage = 'Provide Feedback on Target Message based on the Target Document. Structure your response as a JSON containing an array of objects with a maximum of 5 objects in the array, where each object contains the reason for your feedback (call the field "feedback"), the original sentence from the Target Message (call the field "originalText"), and the recommended text to replace the original text with (call the field "replaceWith"). Do not add commas after the last object field in each array entry. Do not hallucinate.';
 
 
 const defaultContextPre2 = '\nDraft of the Target Message:\n'
@@ -107,18 +107,24 @@ function buildCorrespondenceCardJSON(aiResponseObj) {
 
     txtBlock +=  '<b>Recommended language: </b><font color="#0000FF">"' + aiResponseObj[i].replaceWith + '"</font>\n';
 
-    let rp = CardService.newDecoratedText()
-      .setText(txtBlock)
-      .setWrapText(true)
-    rSection.addWidget(rp);
-
+    
     let params = {
       singleAIResponseObj: JSON.stringify(aiResponseObj[i])
     };
 
+    let scrollDownToTextAction = CardService.newAction()
+      .setFunctionName('scrollDownToText')      
+      .setParameters({item: aiResponseObj[i].originalText});
+    
+
     let applySuggestionsAction = CardService.newAction()
       .setFunctionName('applySuggestion')
       .setParameters(params);
+
+
+    let deleteSuggestionsAction = CardService.newAction()
+      .setFunctionName('applySuggestion')
+      .setParameters(params);  
 
     let p = CardService.newTextParagraph().setText('\n');
     rSection.addWidget(p);
@@ -128,6 +134,30 @@ function buildCorrespondenceCardJSON(aiResponseObj) {
         .setText('Apply this Recommendation')
         .setOnClickAction(applySuggestionsAction)
     );
+
+    rSection.addWidget(
+      CardService.newTextButton()
+        .setText('Delete this Recommendation')
+        .setOnClickAction(deleteSuggestionsAction)
+    );
+
+    let rp = CardService.newDecoratedText()
+      .setText(txtBlock)
+      .setWrapText(true)
+      .setOnClickAction(scrollDownToTextAction)
+    rSection.addWidget(rp);
+
+
+    p = CardService.newTextParagraph().setText('\n');
+    rSection.addWidget(p);
+
+    // let cardSection1Image1 = CardService.newImage()
+    //   .setImageUrl( "https://www.gstatic.com/images/icons/material/system/1x/thumb_down_black_16dp.png" )
+    //       //'https://fonts.google.com/icons?selected=Material%20Symbols%20Outlined%3Athumb_down%3AFILL%400%3Bwght%40400%3BGRAD%400%3Bopsz%4024'
+                
+    //   .setAltText('Thumbs Down');
+
+    // rSection.addWidget(cardSection1Image1); 
 
     p = CardService.newTextParagraph().setText('\n');
     rSection.addWidget(p);
@@ -164,6 +194,7 @@ function buildCorrespondenceCardText(aiResponseText) {
       .setWrapText(true)
   section.addWidget(rp);
 
+  
   card.addSection(section);
 
   let builtCard = card.build();
@@ -197,6 +228,7 @@ function runCorrespondenceQuery(message) {
   console.log("context: " + contextWithoutDoc); 
   console.log("message: " + message); 
   result = callChatAI(id, context, message);
+
 
   //result = callTextAI(id, context + "\n" + message, contextWithoutDoc + "\n" + message);
   return result;
@@ -248,6 +280,10 @@ function applySuggestion(params) {
   body.replaceText(
     singleAIResponseObj.originalText,
     singleAIResponseObj.replaceWith);
+}
+
+function deltetSuggestion(params) {  
+  // todo
 }
 
 function loadContextStringsFromSheet() {

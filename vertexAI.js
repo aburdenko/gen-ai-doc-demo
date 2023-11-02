@@ -5,7 +5,8 @@ var PROJECT_ID="1078703032628"; //Your project ID
 // default models
 var TEXT_MODEL_ID="text-bison-32k";
 //var TEXT_MODEL_ID="text-bison";
-var CHAT_MODEL_ID="chat-bison@001";
+// var CHAT_MODEL_ID="chat-bison@001";
+var CHAT_MODEL_ID="chat-bison-32k";
 
 var batchModuleURL = "";
 var batchSize = 35000;
@@ -70,14 +71,17 @@ function callTextAI(id, prompt, noContentPrompt) {
         "content": prompt
         }],
         "parameters": {
-          "temperature": 0.1,
+          "temperature": 0,
           "maxOutputTokens": 8192,
           "topP": 1.0,
           "topK": 40
         }
       })
       });
-      setProperty( id + ":" + prompt, r.toString() );
+
+      if("null" !== r.toString()) {
+        setProperty( id + ":" + prompt, r.toString() );
+      }
     } catch(e){
       console.error(e);
       return 'Sorry, something went wrong calling the LLM Text API.';
@@ -97,9 +101,7 @@ function callTextAI(id, prompt, noContentPrompt) {
 
 function callChatAI(id, context, message) {  
   console.log( "In callChatAI..." )
-  // console.log("context: " + context);
-  // console.log("message: " + message);
-  
+    
   // check for number of tokens/chars
   if (message.length > batchSize) {
     return 'Sorry, this document is too large to analyze. :('
@@ -115,8 +117,7 @@ function callChatAI(id, context, message) {
 
   //var apiUrl = "https://"+API_ENDPOINT+"/v1/projects/"+PROJECT_ID+"/locations/us-central1/publishers/google/models/"+TEXT_MODEL_ID+":predict";
   var apiUrl = "https://"+API_ENDPOINT+"/v1/projects/"+PROJECT_ID+"/locations/us-central1/publishers/google/models/"+CHAT_MODEL_ID+":predict";
-  console.log("context: " + context);
-
+  
   payload = JSON.stringify( {
     "instances":  [{
       "context": context,
@@ -127,18 +128,18 @@ function callChatAI(id, context, message) {
         }],
       }],
     "parameters": {
-      "temperature": 0.1,
-      "maxOutputTokens": 1024,
-      "topP": 1.0,
+      "temperature": 0,
+      "maxOutputTokens": 8192,
+      "topP": 1,
       "topK": 40
     }
   });
   
-  console.log("Get Property key is: " + id);
-  console.log("Get Property val is: " + getProperty(id));
-
+  // console.log("Get Property key is: " + id);
+  // console.log("Get Property val is: " + getProperty(id));
+  let propKey = id + ":" + message;
   var r;
-  if (null == (r = getProperty(id))){    
+  // if (null == (r = getProperty(propKey))){    
     try {
       r = UrlFetchApp.fetch(apiUrl, {
           method: "post",
@@ -148,17 +149,26 @@ function callChatAI(id, context, message) {
             Authorization: `Bearer ${accessToken}`
           },
           payload: payload
-      });      
+      });            
+
     } catch(e){
       console.log(e);
       return 'Sorry, something went wrong calling the LLM Chat API.';
     }
-    setProperty( id, r.toString() );
-  }
+    
+    console.log("response: " + r.toString());
+    if(null !== r) {
+      console.log( "Setting property to: " +   r.toString());
+      setProperty( propKey, r.toString() );
+    }
+
+    console.log("Get Property key is: " + propKey);
+    console.log("Get Property val is: " + getProperty(propKey));
+  //}
 
   // For troubleshooting
   
-  console.log("response: " + r.toString());
+  
   var responseAll = JSON.parse(r.toString());
   var response = responseAll.predictions[0].candidates[0].content;
 

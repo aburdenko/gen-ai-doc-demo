@@ -160,6 +160,9 @@ function buildMedQuestionResultsCard(event) {
     section.addWidget(rpdt);
   }
 
+  section.addWidget(rpdt);
+
+
   card.addSection(section);
   let builtCard = card.build();
 
@@ -177,12 +180,15 @@ function runMedicalQuery(query) {
   let doc = DocumentApp.getActiveDocument();
   let docContentPrompt = doc.getBody().getText();
     
-  preQuery = "Using the following document: ";
+  let preQuery = "Using the following document: ";
+  let noContentPrompt = preQuery + "<DOCUMENT/>" + "\n";
   preQuery += docContentPrompt + "\n";
   query = preQuery + ". " + query;
+  nopromptQuery = noContentPrompt + ". " + query;
+  
 
   console.log("Prompt is: " + query);
-  result = callTextAI(query);    
+  result = callTextAI(doc.getId(), query, noContentPrompt);    
 
   setProperty( query, result );
 //}
